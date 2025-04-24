@@ -61,10 +61,15 @@ static const unsigned SPIRDefIsPrivMap[] = {
 // Used by both the SPIR and SPIR-V targets.
 static const unsigned SPIRDefIsGenMap[] = {
     4, // Default
+<<<<<<< HEAD
     // OpenCL address space values for this map are dummy and they can't be used
     // FIXME: reset opencl_global entry to 0. Currently CodeGen libary uses
     // opencl_global in SYCL language mode, but we should switch to using
     // sycl_global instead.
+=======
+    // Some OpenCL address space values for this map are dummy and they can't be
+    // used
+>>>>>>> 52a96491e1e4e0d033e39fad87f49ccd871df41d
     1, // opencl_global
     0, // opencl_local
     2, // opencl_constant
