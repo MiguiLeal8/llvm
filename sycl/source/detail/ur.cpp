@@ -217,6 +217,8 @@ static void initializeAdapters(std::vector<AdapterPtr> &Adapters,
       return backend::ext_oneapi_hip;
     case UR_ADAPTER_BACKEND_NATIVE_CPU:
       return backend::ext_oneapi_native_cpu;
+    //case UR_ADAPTER_BACKEND_QPU:
+    //  return backend::qpu;
     default:
       // Throw an exception, this should be unreachable.
       CHECK_UR_SUCCESS(UR_RESULT_ERROR_INVALID_ENUMERATION)

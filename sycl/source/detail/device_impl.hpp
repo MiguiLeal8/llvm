@@ -86,6 +86,11 @@ public:
   /// \return true if SYCL device is an accelerator device
   bool is_accelerator() const { return MType == UR_DEVICE_TYPE_FPGA; }
 
+  /// Check if device is a CPU device
+  ///
+  /// \return true if SYCL device is a CPU device
+  //bool is_qpu() const { return MType == UR_DEVICE_TYPE_QPU; }
+
   /// Return device type
   ///
   /// \return the type of the device

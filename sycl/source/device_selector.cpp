@@ -111,6 +111,7 @@ device select_device(DSelectorInvocableType DeviceSelectorInvocable,
   constexpr const char Cpu[] = "'info::device_type::cpu' ";
   constexpr const char Gpu[] = "'info::device_type::gpu' ";
   constexpr const char Acc[] = "'info::device_type::accelerator' ";
+  // constexpr const char Qpu[] = "'info::device_type::qpu' ";
   constexpr const char Suffix[] = "available.";
   constexpr auto ReserveSize = sizeof(Prefix) + sizeof(Suffix) + sizeof(Acc);
   Message.reserve(ReserveSize);
@@ -127,7 +128,9 @@ device select_device(DSelectorInvocableType DeviceSelectorInvocable,
   } else if ((Selector && *Selector == accelerator_selector_v) ||
              DeviceSelectorInvocable.target<sycl::accelerator_selector>()) {
     Message += Acc;
-  }
+  } // else if ((Selector && *Selector == qpu_selector_v) ||
+  //            DeviceSelectorInvocable.target<sycl::qpu_selector>()) {
+  //  Message += Qpu;
   Message += Suffix;
   throw exception(make_error_code(errc::runtime), Message);
 }
@@ -166,6 +169,7 @@ select_device(const DSelectorInvocableType &DeviceSelectorInvocable,
 /// 2. CPU
 /// 3. Host
 /// 4. Accelerator
+/// 5. QPU
 
 static void traceDeviceSelector(const std::string &DeviceType) {
   bool ShouldTrace = detail::ur::trace(detail::ur::TraceLevel::TRACE_BASIC);
@@ -192,6 +196,9 @@ __SYCL_EXPORT int default_selector_v(const device &dev) {
   // But this device type gets the lowest heuristic point.
   if (dev.is_accelerator())
     Score += 75;
+
+  // if (dev.is_qpu())
+  //   Score += 50;
 
   // Add preference score.
   Score += detail::getDevicePreference(dev);
@@ -231,6 +238,17 @@ __SYCL_EXPORT int accelerator_selector_v(const device &dev) {
   }
   return Score;
 }
+
+/*__SYCL_EXPORT int qpu_selector_v(const device &dev) {
+  int Score = detail::REJECT_DEVICE_SCORE;
+
+  traceDeviceSelector("info::device_type::qpu");
+  if (dev.is_qpu()) {
+    Score = 1000;
+    Score += detail::getDevicePreference(dev);
+  }
+  return Score;
+}*/
 
 __SYCL_EXPORT detail::DSelectorInvocableType
 aspect_selector(const std::vector<aspect> &RequireList,

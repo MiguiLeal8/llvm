@@ -40,6 +40,8 @@ static const AdapterPtr &getAdapter(backend Backend) {
     return ur::getAdapter<backend::ext_oneapi_cuda>();
   case backend::ext_oneapi_hip:
     return ur::getAdapter<backend::ext_oneapi_hip>();
+  //case backend::qpu:
+  //  return ur::getAdapter<backend::qpu>();
   default:
     throw sycl::exception(
         sycl::make_error_code(sycl::errc::runtime),
@@ -62,6 +64,8 @@ backend convertUrBackend(ur_platform_backend_t UrBackend) {
     return backend::ext_oneapi_hip;
   case UR_PLATFORM_BACKEND_NATIVE_CPU:
     return backend::ext_oneapi_native_cpu;
+  //case UR_PLATFORM_BACKEND_QPU:
+  //  return backend::qpu;
   default:
     throw exception(make_error_code(errc::runtime),
                     "convertBackend: Unsupported backend");
