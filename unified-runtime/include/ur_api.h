@@ -951,6 +951,8 @@ typedef enum ur_device_init_flag_t {
   UR_DEVICE_INIT_FLAG_MCA = UR_BIT(3),
   /// initialize VPU device adapters.
   UR_DEVICE_INIT_FLAG_VPU = UR_BIT(4),
+  /// initialize QPU device adapters.
+  UR_DEVICE_INIT_FLAG_QPU = UR_BIT(5),
   /// @cond
   UR_DEVICE_INIT_FLAG_FORCE_UINT32 = 0x7fffffff
   /// @endcond

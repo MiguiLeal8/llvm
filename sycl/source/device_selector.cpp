@@ -199,7 +199,7 @@ __SYCL_EXPORT int default_selector_v(const device &dev) {
     Score += 75;
 
   if (dev.is_qpu())
-    Score += 500;
+    Score += 50;
 
   // Add preference score.
   Score += detail::getDevicePreference(dev);

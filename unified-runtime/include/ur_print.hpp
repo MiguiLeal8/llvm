@@ -2088,6 +2088,9 @@ inline std::ostream &operator<<(std::ostream &os,
   case UR_DEVICE_INIT_FLAG_VPU:
     os << "UR_DEVICE_INIT_FLAG_VPU";
     break;
+  case UR_DEVICE_INIT_FLAG_QPU:
+    os << "UR_DEVICE_INIT_FLAG_QPU";
+    break;
   default:
     os << "unknown enumerator";
     break;
@@ -2153,6 +2156,17 @@ inline ur_result_t printFlag<ur_device_init_flag_t>(std::ostream &os,
     }
     os << UR_DEVICE_INIT_FLAG_VPU;
   }
+
+  if ((val & UR_DEVICE_INIT_FLAG_QPU) == (uint32_t)UR_DEVICE_INIT_FLAG_QPU) {
+    val ^= (uint32_t)UR_DEVICE_INIT_FLAG_QPU;
+    if (!first) {
+      os << " | ";
+    } else {
+      first = false;
+    }
+    os << UR_DEVICE_INIT_FLAG_QPU;
+  }
+
   if (val != 0) {
     std::bitset<32> bits(val);
     if (!first) {
@@ -2356,6 +2370,9 @@ inline std::ostream &operator<<(std::ostream &os,
   case UR_ADAPTER_BACKEND_NATIVE_CPU:
     os << "UR_ADAPTER_BACKEND_NATIVE_CPU";
     break;
+  case UR_ADAPTER_BACKEND_QPU:
+    os << "UR_ADAPTER_BACKEND_QPU";
+    break;
   default:
     os << "unknown enumerator";
     break;
@@ -2553,6 +2570,9 @@ inline std::ostream &operator<<(std::ostream &os,
   case UR_PLATFORM_BACKEND_NATIVE_CPU:
     os << "UR_PLATFORM_BACKEND_NATIVE_CPU";
     break;
+  case UR_PLATFORM_BACKEND_QPU:
+    os << "UR_PLATFORM_BACKEND_QPU";
+    break;
   default:
     os << "unknown enumerator";
     break;
@@ -2610,6 +2630,9 @@ inline std::ostream &operator<<(std::ostream &os, enum ur_device_type_t value) {
     break;
   case UR_DEVICE_TYPE_VPU:
     os << "UR_DEVICE_TYPE_VPU";
+    break;
+  case UR_DEVICE_TYPE_QPU:
+    os << "UR_DEVICE_TYPE_QPU";
     break;
   default:
     os << "unknown enumerator";

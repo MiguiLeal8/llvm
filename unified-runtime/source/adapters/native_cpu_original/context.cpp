@@ -20,8 +20,7 @@ UR_APIEXPORT ur_result_t UR_APICALL urContextCreate(
     [[maybe_unused]] uint32_t DeviceCount, const ur_device_handle_t *phDevices,
     const ur_context_properties_t * /*pProperties*/,
     ur_context_handle_t *phContext) {
-  // assert(DeviceCount == 1);
-  assert(DeviceCount > 0);
+  assert(DeviceCount == 1);
 
   // TODO: Proper error checking.
   auto ctx = new ur_context_handle_t_(*phDevices);

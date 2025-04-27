@@ -86,12 +86,11 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGet(ur_platform_handle_t hPlatform,
                                                 uint32_t *pNumDevices) {
   UR_ASSERT(hPlatform, UR_RESULT_ERROR_INVALID_NULL_HANDLE);
 
-  uint32_t DeviceCount = 0;
-  for (const auto &Device : hPlatform->Devices) {
-    if (DeviceType == UR_DEVICE_TYPE_ALL || Device->DeviceType == DeviceType) {
-      DeviceCount++;
-    }
-  }
+  const bool AskingForAll = DeviceType == UR_DEVICE_TYPE_ALL;
+  const bool AskingForDefault = DeviceType == UR_DEVICE_TYPE_DEFAULT;
+  const bool AskingForCPU = DeviceType == UR_DEVICE_TYPE_CPU;
+  const bool ValidDeviceType = AskingForDefault || AskingForAll || AskingForCPU;
+  uint32_t DeviceCount = ValidDeviceType ? 1 : 0;
 
   if (pNumDevices) {
     *pNumDevices = DeviceCount;
@@ -111,17 +110,8 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGet(ur_platform_handle_t hPlatform,
     return UR_RESULT_SUCCESS;
   }
 
-  uint32_t Index = 0;
   if (phDevices) {
-    // phDevices[0] = &hPlatform->TheDevice;
-    for (const auto &Device : hPlatform->Devices) {
-      if (DeviceType == UR_DEVICE_TYPE_ALL ||
-          Device->DeviceType == DeviceType) {
-        if (Index < NumEntries) {
-          phDevices[Index++] = Device.get();
-        }
-      }
-    }
+    phDevices[0] = &hPlatform->TheDevice;
   }
 
   return UR_RESULT_SUCCESS;
@@ -137,24 +127,19 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
 
   switch (static_cast<uint32_t>(propName)) {
   case UR_DEVICE_INFO_TYPE:
-    return ReturnValue(hDevice->DeviceType);
+    return ReturnValue(UR_DEVICE_TYPE_CPU);
   case UR_DEVICE_INFO_PARENT_DEVICE:
     return ReturnValue(nullptr);
   case UR_DEVICE_INFO_PLATFORM:
     return ReturnValue(hDevice->Platform);
   case UR_DEVICE_INFO_NAME:
-    return ReturnValue(hDevice->Name.c_str());
+    return ReturnValue("SYCL Native CPU");
   case UR_DEVICE_INFO_IMAGE_SUPPORT:
     return ReturnValue(bool{false});
   case UR_DEVICE_INFO_DRIVER_VERSION:
     return ReturnValue("0.0.0");
   case UR_DEVICE_INFO_VENDOR:
-    if (hDevice->DeviceType == UR_DEVICE_TYPE_CPU) {
-      return ReturnValue("Intel(R) Corporation");
-    } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
-      return ReturnValue("Simulated QPU Vendor");
-    }
-    // break;
+    return ReturnValue("Intel(R) Corporation");
   case UR_DEVICE_INFO_BACKEND_RUNTIME_VERSION:
     // TODO : CHECK
     return ReturnValue("0.0.0");
@@ -308,12 +293,7 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
     // TODO : CHECK
     return ReturnValue(uint64_t{0});
   case UR_DEVICE_INFO_GLOBAL_MEM_SIZE:
-    if (hDevice->DeviceType == UR_DEVICE_TYPE_CPU) {
-      return ReturnValue(hDevice->mem_size);
-    } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
-      return ReturnValue(uint64_t{1L * 1024 * 1024 * 1024}); // 1 GB
-    }
-    // break;
+    return ReturnValue(hDevice->mem_size);
   case UR_DEVICE_INFO_LOCAL_MEM_SIZE:
     // TODO : CHECK
     return ReturnValue(uint64_t{32768});
@@ -342,12 +322,7 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
   case UR_DEVICE_INFO_PARTITION_AFFINITY_DOMAIN:
     return ReturnValue(ur_device_affinity_domain_flags_t{0});
   case UR_DEVICE_INFO_MAX_MEM_ALLOC_SIZE: {
-    size_t Global;
-    if (hDevice->DeviceType == UR_DEVICE_TYPE_CPU) {
-      Global = hDevice->mem_size;
-    } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
-      Global = uint64_t{1L * 1024 * 1024 * 1024}; // 1 GB
-    }
+    size_t Global = hDevice->mem_size;
 
     auto QuarterGlobal = static_cast<uint32_t>(Global / 4u);
 
@@ -555,11 +530,5 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceSelectBinary(
   return UR_RESULT_ERROR_INVALID_BINARY;
 }
 
-// ur_device_handle_t_::ur_device_handle_t_(ur_platform_handle_t ArgPlt)
-//     : mem_size(os_memory_bounded_size()), Platform(ArgPlt) {}
-
-ur_device_handle_t_::ur_device_handle_t_(ur_platform_handle_t Plat,
-                                         ur_device_type_t Type,
-                                         const std::string &DeviceName)
-    : mem_size(os_memory_bounded_size()), Platform(Plat), DeviceType(Type),
-      Name(DeviceName) {}
+ur_device_handle_t_::ur_device_handle_t_(ur_platform_handle_t ArgPlt)
+    : mem_size(os_memory_bounded_size()), Platform(ArgPlt) {}

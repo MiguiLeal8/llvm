@@ -16,12 +16,5 @@
 #include "device.hpp"
 
 struct ur_platform_handle_t_ {
-  //ur_device_handle_t_ TheDevice{this};
-  std::vector<std::unique_ptr<ur_device_handle_t_>> Devices; // Lista de dispositivos
-
-  ur_platform_handle_t_() {
-    // Inicializar dispositivos (CPU y QPU simulada)
-    Devices.emplace_back(std::make_unique<ur_device_handle_t_>(this, UR_DEVICE_TYPE_CPU, "Native CPU"));
-    Devices.emplace_back(std::make_unique<ur_device_handle_t_>(this, UR_DEVICE_TYPE_QPU, "Simulated QPU"));
-  }
+  ur_device_handle_t_ TheDevice{this};
 };

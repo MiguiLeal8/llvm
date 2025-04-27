@@ -69,6 +69,8 @@ std::string getDeviceTypeName(const device &Device) {
     return "host";
   case info::device_type::accelerator:
     return "fpga";
+  case info::device_type::qpu:
+    return "qpu";
   default:
     return "unknown";
   }
@@ -447,6 +449,7 @@ int main(int argc, char **argv) {
     printSelectorChoice(accelerator_selector(), "accelerator_selector()  : ");
     printSelectorChoice(cpu_selector(), "cpu_selector()          : ");
     printSelectorChoice(gpu_selector(), "gpu_selector()          : ");
+    printSelectorChoice(qpu_selector(), "qpu_selector()          : ");
 
     // Print trivial custom selectors choice
     printSelectorChoice(custom_selector(info::device_type::gpu),
@@ -455,6 +458,8 @@ int main(int argc, char **argv) {
                         "custom_selector(cpu)    : ");
     printSelectorChoice(custom_selector(info::device_type::accelerator),
                         "custom_selector(acc)    : ");
+    printSelectorChoice(custom_selector(info::device_type::qpu),
+                        "custom_selector(qpu)    : ");
 
   } catch (sycl::exception &e) {
     std::cerr << "SYCL Exception encountered: " << e.what() << std::endl
