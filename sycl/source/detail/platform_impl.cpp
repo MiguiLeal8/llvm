@@ -241,6 +241,9 @@ platform_impl::filterDeviceFilter(std::vector<ur_device_handle_t> &UrDevices,
     case UR_DEVICE_TYPE_FPGA:
       DeviceType = info::device_type::accelerator;
       break;
+    case UR_DEVICE_TYPE_QPU:
+      DeviceType = info::device_type::qpu;
+      break;
     }
 
     for (const FilterT &Filter : FilterList->get()) {
@@ -469,6 +472,9 @@ platform_impl::get_devices(info::device_type DeviceType) const {
     break;
   case info::device_type::accelerator:
     UrDeviceType = UR_DEVICE_TYPE_FPGA;
+    break;
+  case info::device_type::qpu:
+    UrDeviceType = UR_DEVICE_TYPE_QPU;
     break;
   }
 

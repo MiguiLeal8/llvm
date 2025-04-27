@@ -89,7 +89,7 @@ public:
   /// Check if device is a CPU device
   ///
   /// \return true if SYCL device is a CPU device
-  //bool is_qpu() const { return MType == UR_DEVICE_TYPE_QPU; }
+  bool is_qpu() const { return MType == UR_DEVICE_TYPE_QPU; }
 
   /// Return device type
   ///

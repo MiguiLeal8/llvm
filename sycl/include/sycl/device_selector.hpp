@@ -35,8 +35,9 @@ class filter_selector;
 /// \sa device
 ///
 /// \ingroup sycl_api_dev_sel
-class __SYCL_EXPORT __SYCL2020_DEPRECATED(
-    "Use SYCL 2020 callable device selectors instead.") device_selector {
+class __SYCL_EXPORT
+__SYCL2020_DEPRECATED("Use SYCL 2020 callable device selectors instead.")
+    device_selector {
 
 public:
   virtual ~device_selector() = default;
@@ -51,9 +52,9 @@ public:
 /// \sa device
 ///
 /// \ingroup sycl_api_dev_sel
-class __SYCL_EXPORT __SYCL2020_DEPRECATED(
-    "Use the callable sycl::default_selector_v instead.") default_selector
-    : public device_selector {
+class __SYCL_EXPORT
+__SYCL2020_DEPRECATED("Use the callable sycl::default_selector_v instead.")
+    default_selector : public device_selector {
 public:
   int operator()(const device &dev) const override;
 };
@@ -63,9 +64,9 @@ public:
 /// \sa device
 ///
 /// \ingroup sycl_api_dev_sel
-class __SYCL_EXPORT __SYCL2020_DEPRECATED(
-    "Use the callable sycl::gpu_selector_v instead.") gpu_selector
-    : public device_selector {
+class __SYCL_EXPORT
+__SYCL2020_DEPRECATED("Use the callable sycl::gpu_selector_v instead.")
+    gpu_selector : public device_selector {
 public:
   int operator()(const device &dev) const override;
 };
@@ -75,9 +76,9 @@ public:
 /// \sa device
 ///
 /// \ingroup sycl_api_dev_sel
-class __SYCL_EXPORT __SYCL2020_DEPRECATED(
-    "Use the callable sycl::cpu_selector_v instead.") cpu_selector
-    : public device_selector {
+class __SYCL_EXPORT
+__SYCL2020_DEPRECATED("Use the callable sycl::cpu_selector_v instead.")
+    cpu_selector : public device_selector {
 public:
   int operator()(const device &dev) const override;
 };
@@ -94,6 +95,18 @@ public:
   int operator()(const device &dev) const override;
 };
 
+/// Selects any SYCL QPU device.
+///
+/// \sa device
+///
+/// \ingroup sycl_api_dev_sel
+class __SYCL_EXPORT
+__SYCL2020_DEPRECATED("Use the callable sycl::qpu_selector_v instead.")
+    qpu_selector : public device_selector {
+public:
+  int operator()(const device &dev) const override;
+};
+
 // -------------- SYCL 2020
 
 // SYCL 2020 standalone selectors
@@ -101,6 +114,7 @@ __SYCL_EXPORT int default_selector_v(const device &dev);
 __SYCL_EXPORT int gpu_selector_v(const device &dev);
 __SYCL_EXPORT int cpu_selector_v(const device &dev);
 __SYCL_EXPORT int accelerator_selector_v(const device &dev);
+__SYCL_EXPORT int qpu_selector_v(const device &dev);
 
 namespace detail {
 // SYCL 2020 section 4.6.1.1 defines a negative score to reject a device from

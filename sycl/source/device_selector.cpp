@@ -111,7 +111,7 @@ device select_device(DSelectorInvocableType DeviceSelectorInvocable,
   constexpr const char Cpu[] = "'info::device_type::cpu' ";
   constexpr const char Gpu[] = "'info::device_type::gpu' ";
   constexpr const char Acc[] = "'info::device_type::accelerator' ";
-  // constexpr const char Qpu[] = "'info::device_type::qpu' ";
+  constexpr const char Qpu[] = "'info::device_type::qpu' ";
   constexpr const char Suffix[] = "available.";
   constexpr auto ReserveSize = sizeof(Prefix) + sizeof(Suffix) + sizeof(Acc);
   Message.reserve(ReserveSize);
@@ -128,9 +128,10 @@ device select_device(DSelectorInvocableType DeviceSelectorInvocable,
   } else if ((Selector && *Selector == accelerator_selector_v) ||
              DeviceSelectorInvocable.target<sycl::accelerator_selector>()) {
     Message += Acc;
-  } // else if ((Selector && *Selector == qpu_selector_v) ||
-  //            DeviceSelectorInvocable.target<sycl::qpu_selector>()) {
-  //  Message += Qpu;
+  } else if ((Selector && *Selector == qpu_selector_v) ||
+             DeviceSelectorInvocable.target<sycl::qpu_selector>()) {
+    Message += Qpu;
+  }
   Message += Suffix;
   throw exception(make_error_code(errc::runtime), Message);
 }
@@ -197,8 +198,8 @@ __SYCL_EXPORT int default_selector_v(const device &dev) {
   if (dev.is_accelerator())
     Score += 75;
 
-  // if (dev.is_qpu())
-  //   Score += 50;
+  if (dev.is_qpu())
+    Score += 500;
 
   // Add preference score.
   Score += detail::getDevicePreference(dev);
@@ -239,7 +240,7 @@ __SYCL_EXPORT int accelerator_selector_v(const device &dev) {
   return Score;
 }
 
-/*__SYCL_EXPORT int qpu_selector_v(const device &dev) {
+__SYCL_EXPORT int qpu_selector_v(const device &dev) {
   int Score = detail::REJECT_DEVICE_SCORE;
 
   traceDeviceSelector("info::device_type::qpu");
@@ -248,7 +249,7 @@ __SYCL_EXPORT int accelerator_selector_v(const device &dev) {
     Score += detail::getDevicePreference(dev);
   }
   return Score;
-}*/
+}
 
 __SYCL_EXPORT detail::DSelectorInvocableType
 aspect_selector(const std::vector<aspect> &RequireList,
@@ -293,6 +294,10 @@ int gpu_selector::operator()(const device &dev) const {
 
 int cpu_selector::operator()(const device &dev) const {
   return cpu_selector_v(dev);
+}
+
+int qpu_selector::operator()(const device &dev) const {
+  return qpu_selector_v(dev);
 }
 
 int accelerator_selector::operator()(const device &dev) const {

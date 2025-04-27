@@ -78,7 +78,7 @@ bool device::is_gpu() const { return impl->is_gpu(); }
 
 bool device::is_accelerator() const { return impl->is_accelerator(); }
 
-//bool device::is_qpu() const { return impl->is_qpu(); }
+bool device::is_qpu() const { return impl->is_qpu(); }
 
 platform device::get_platform() const { return impl->get_platform(); }
 

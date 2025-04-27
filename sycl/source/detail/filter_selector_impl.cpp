@@ -65,6 +65,8 @@ filter create_filter(const std::string &Input) {
       Result.DeviceType = sycl::info::device_type::gpu;
     } else if (Token == "accelerator" && !Result.DeviceType) {
       Result.DeviceType = sycl::info::device_type::accelerator;
+    } else if (Token == "qpu" && !Result.DeviceType) {
+      Result.DeviceType = sycl::info::device_type::qpu;
     } else if (Token == "opencl" && !Result.Backend) {
       Result.Backend = backend::opencl;
     } else if (Token == "level_zero" && !Result.Backend) {

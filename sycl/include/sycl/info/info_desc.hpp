@@ -59,6 +59,7 @@ enum class device_type : uint32_t {
   cpu = UR_DEVICE_TYPE_CPU,
   gpu = UR_DEVICE_TYPE_GPU,
   accelerator = UR_DEVICE_TYPE_FPGA,
+  qpu = UR_DEVICE_TYPE_QPU,
   // TODO: evaluate the need for equivalent UR enums for these types
   custom,
   automatic,

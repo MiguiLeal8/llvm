@@ -366,8 +366,8 @@ bool device_impl::has(aspect Aspect) const {
     return is_gpu();
   case aspect::accelerator:
     return is_accelerator();
-  //case aspect::qpu:
-  //  return is_qpu();
+  case aspect::qpu:
+    return is_qpu();
   case aspect::custom:
     return false;
   // TODO: Implement this for FPGA emulator.

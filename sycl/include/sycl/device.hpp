@@ -131,6 +131,11 @@ public:
   /// \return true if SYCL device is a GPU device
   bool is_gpu() const;
 
+  /// Check if device is a QPU device
+  ///
+  /// \return true if SYCL device is a QPU device
+  bool is_qpu() const;
+
   /// Check if device is an accelerator device
   ///
   /// \return true if SYCL device is an accelerator device

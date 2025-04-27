@@ -1422,6 +1422,8 @@ typedef enum ur_adapter_backend_t {
   UR_ADAPTER_BACKEND_HIP = 4,
   /// The backend is Native CPU
   UR_ADAPTER_BACKEND_NATIVE_CPU = 5,
+  /// The backend is QPU
+  UR_ADAPTER_BACKEND_QPU = 6,
   /// @cond
   UR_ADAPTER_BACKEND_FORCE_UINT32 = 0x7fffffff
   /// @endcond
@@ -1801,6 +1803,8 @@ typedef enum ur_platform_backend_t {
   UR_PLATFORM_BACKEND_HIP = 4,
   /// The backend is Native CPU
   UR_PLATFORM_BACKEND_NATIVE_CPU = 5,
+  // The backend is QPU
+  UR_PLATFORM_BACKEND_QPU = 6,
   /// @cond
   UR_PLATFORM_BACKEND_FORCE_UINT32 = 0x7fffffff
   /// @endcond
@@ -1913,6 +1917,8 @@ typedef enum ur_device_type_t {
   UR_DEVICE_TYPE_MCA = 6,
   /// Vision Processing Unit
   UR_DEVICE_TYPE_VPU = 7,
+  /// Quantum Processing Unit
+  UR_DEVICE_TYPE_QPU = 8,
   /// @cond
   UR_DEVICE_TYPE_FORCE_UINT32 = 0x7fffffff
   /// @endcond
