@@ -19,12 +19,14 @@ struct ur_device_handle_t_ {
 
   const uint64_t mem_size;
   ur_platform_handle_t Platform;*/
-  ur_platform_handle_t Platform; // Plataforma asociada
-  ur_device_type_t DeviceType;    // Tipo de dispositivo (CPU o QPU)
-  std::string Name;               // Nombre del dispositivo
+  ur_device_type_t DeviceType; // Tipo de dispositivo (CPU o QPU)
+  std::string Name;            // Nombre del dispositivo
 
   native_cpu::threadpool_t tp;
-  const uint64_t mem_size;
 
-  ur_device_handle_t_(ur_platform_handle_t Plat, ur_device_type_t Type, const std::string &DeviceName);
+  ur_device_handle_t_(ur_platform_handle_t Plat, ur_device_type_t Type,
+                      const std::string &DeviceName);
+
+  const uint64_t mem_size;
+  ur_platform_handle_t Platform; // Plataforma asociada
 };

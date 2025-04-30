@@ -153,6 +153,8 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
       return ReturnValue("Intel(R) Corporation");
     } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
       return ReturnValue("Simulated QPU Vendor");
+    } else {
+      return ReturnValue("Unknown");
     }
     // break;
   case UR_DEVICE_INFO_BACKEND_RUNTIME_VERSION:
@@ -312,6 +314,8 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
       return ReturnValue(hDevice->mem_size);
     } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
       return ReturnValue(uint64_t{1L * 1024 * 1024 * 1024}); // 1 GB
+    } else {
+      return ReturnValue(uint64_t{1L * 1024 * 1024 * 1024}); // 1 GB
     }
     // break;
   case UR_DEVICE_INFO_LOCAL_MEM_SIZE:
@@ -347,6 +351,8 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
       Global = hDevice->mem_size;
     } else if (hDevice->DeviceType == UR_DEVICE_TYPE_QPU) {
       Global = uint64_t{1L * 1024 * 1024 * 1024}; // 1 GB
+    } else {
+      Global = hDevice->mem_size;
     }
 
     auto QuarterGlobal = static_cast<uint32_t>(Global / 4u);

@@ -414,6 +414,9 @@ void applyAllowList(std::vector<ur_device_handle_t> &UrDevices,
     case UR_DEVICE_TYPE_CPU:
       DeviceType = info::device_type::cpu;
       break;
+    case UR_DEVICE_TYPE_QPU:
+      DeviceType = info::device_type::qpu;
+      break;
     case UR_DEVICE_TYPE_FPGA:
       DeviceType = info::device_type::accelerator;
       break;
