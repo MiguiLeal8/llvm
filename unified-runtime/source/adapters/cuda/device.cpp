@@ -52,7 +52,8 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
 
   switch ((uint32_t)propName) {
   case UR_DEVICE_INFO_TYPE: {
-    return ReturnValue(UR_DEVICE_TYPE_GPU);
+    // return ReturnValue(UR_DEVICE_TYPE_GPU);
+    return ReturnValue(hDevice->getDeviceType());
   }
   case UR_DEVICE_INFO_VENDOR_ID: {
     return ReturnValue(4318u);
@@ -576,13 +577,23 @@ UR_APIEXPORT ur_result_t UR_APICALL urDeviceGetInfo(ur_device_handle_t hDevice,
     return ReturnValue(hDevice->getPlatform());
   }
   case UR_DEVICE_INFO_NAME: {
-    static constexpr size_t MaxDeviceNameLength = 256u;
-    char Name[MaxDeviceNameLength];
-    UR_CHECK_ERROR(cuDeviceGetName(Name, MaxDeviceNameLength, hDevice->get()));
-    return ReturnValue(Name, strlen(Name) + 1);
+    if (hDevice->getDeviceType() == UR_DEVICE_TYPE_QPU) {
+      return ReturnValue("Simulated QPU on NVIDIA");
+    } else {
+      static constexpr size_t MaxDeviceNameLength = 256u;
+      char Name[MaxDeviceNameLength];
+      UR_CHECK_ERROR(
+          cuDeviceGetName(Name, MaxDeviceNameLength, hDevice->get()));
+      return ReturnValue(Name, strlen(Name) + 1);
+    }
   }
   case UR_DEVICE_INFO_VENDOR: {
-    return ReturnValue("NVIDIA Corporation");
+    if (hDevice->getDeviceType() == UR_DEVICE_TYPE_QPU) {
+      return ReturnValue("Simulated QPU Vendor");
+    } else {
+      return ReturnValue("NVIDIA Corporation");
+    }
+    // return ReturnValue("NVIDIA Corporation");
   }
   case UR_DEVICE_INFO_DRIVER_VERSION: {
     auto Version = getCudaVersionString();

@@ -144,10 +144,20 @@ urPlatformGet(ur_adapter_handle_t, uint32_t, ur_platform_handle_t *phPlatforms,
               // Use default stream to record base event counter
               UR_CHECK_ERROR(cuEventRecord(EvBase, 0));
 
+              // ur_device_type_t DeviceType = (i == 0) ? UR_DEVICE_TYPE_QPU :
+              // UR_DEVICE_TYPE_GPU;
+
               ur::cuda::adapter->Platform->Devices.emplace_back(
                   new ur_device_handle_t_{Device, Context, EvBase,
                                           ur::cuda::adapter->Platform.get(),
-                                          static_cast<uint32_t>(i)});
+                                          static_cast<uint32_t>(i),
+                                          UR_DEVICE_TYPE_GPU});
+
+              ur::cuda::adapter->Platform->Devices.emplace_back(
+                  new ur_device_handle_t_{Device, Context, EvBase,
+                                          ur::cuda::adapter->Platform.get(),
+                                          static_cast<uint32_t>(i),
+                                          UR_DEVICE_TYPE_QPU});
             }
 
             UR_CHECK_ERROR(CreateDeviceMemoryProvidersPools(

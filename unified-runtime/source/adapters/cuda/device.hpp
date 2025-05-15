@@ -26,6 +26,7 @@ private:
   std::atomic_uint32_t RefCount;
   ur_platform_handle_t Platform;
   uint32_t DeviceIndex;
+  ur_device_type_t DeviceType; // Tipo de dispositivo (GPU o QPU simulada)
 
   static constexpr uint32_t MaxWorkItemDimensions = 3u;
   size_t MaxWorkItemSizes[MaxWorkItemDimensions];
@@ -41,9 +42,10 @@ private:
 
 public:
   ur_device_handle_t_(native_type cuDevice, CUcontext cuContext, CUevent evBase,
-                      ur_platform_handle_t platform, uint32_t DevIndex)
+                      ur_platform_handle_t platform, uint32_t DevIndex,
+                      ur_device_type_t Type)
       : CuDevice(cuDevice), CuContext(cuContext), EvBase(evBase), RefCount{1},
-        Platform(platform), DeviceIndex{DevIndex} {
+        Platform(platform), DeviceIndex{DevIndex}, DeviceType{Type} {
     UR_CHECK_ERROR(cuDeviceGetAttribute(
         &MaxRegsPerBlock, CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_BLOCK,
         cuDevice));
@@ -89,6 +91,8 @@ public:
     MemoryPoolDevice = nullptr;
     MemoryPoolShared = nullptr;
   }
+
+  ur_device_type_t getDeviceType() const noexcept { return DeviceType; }
 
   ~ur_device_handle_t_() {
     if (MemoryPoolDevice) {
