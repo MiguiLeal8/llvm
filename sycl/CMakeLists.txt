@@ -21,6 +21,52 @@ if (SYCL_ENABLE_PLUGINS)
   set(SYCL_ENABLE_BACKENDS "${SYCL_ENABLE_PLUGINS}" CACHE STRING "Backends enabled for SYCL" FORCE)
 endif()
 
+# Añadir los directorios de encabezados de aer-cpp
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/framework
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/controllers
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/simulators
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/json/single_include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/spdlog/include
+)
+
+#target_include_directories(sycl-ls PRIVATE
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/framework
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/controllers
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/src/simulators
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/aer-cpp/include
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/json/single_include
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../third-party/spdlog/include
+#)
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(pybind11 REQUIRED)
+find_package(OpenMP REQUIRED)
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
+include_directories(${Python3_INCLUDE_DIRS})
+link_directories(${Python3_LIBRARY_DIRS})
+
+link_libraries(
+    Python3::Python
+    pybind11::module
+    OpenMP::OpenMP_CXX
+    ${BLAS_LIBRARIES}
+    ${LAPACK_LIBRARIES}
+)
+
+#target_link_libraries(sycl-ls PRIVATE
+#    Python3::Python
+#    pybind11::module
+#    OpenMP::OpenMP_CXX
+#    ${BLAS_LIBRARIES}
+#    ${LAPACK_LIBRARIES}
+#)
+
 # If SYCL_ENABLE_BACKENDS is undefined, we default to enabling OpenCL and Level
 # Zero backends.
 if (NOT DEFINED SYCL_ENABLE_BACKENDS)

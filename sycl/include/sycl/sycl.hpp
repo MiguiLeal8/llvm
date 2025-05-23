@@ -125,3 +125,5 @@
 #include <sycl/ext/oneapi/weak_object.hpp>
 
 #include <sycl/detail/qpu.hpp>
+#include <sycl/detail/aer_simulator/quiskit_circuit.hpp>
+#include <sycl/detail/aer_simulator/aer_simulator.hpp>

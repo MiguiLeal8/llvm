@@ -698,6 +698,27 @@ void Linux::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
 
   if (!DriverArgs.hasArg(options::OPT_nobuiltininc) && getTriple().isMusl())
     addSystemInclude(DriverArgs, CC1Args, ResourceDirInclude);
+
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/aer-cpp/src");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/aer-cpp/src/framework");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/aer-cpp/src/controllers");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/aer-cpp/src/simulators");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/aer-cpp/include");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/json/single_include");
+    
+  CC1Args.push_back("-isystem");
+  CC1Args.push_back("/home/miguileal8/sycl_workspace/llvm/third-party/spdlog/include");    
 }
 
 void Linux::addLibStdCxxIncludePaths(const llvm::opt::ArgList &DriverArgs,

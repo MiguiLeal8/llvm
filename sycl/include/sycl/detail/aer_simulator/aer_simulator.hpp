@@ -1,0 +1,63 @@
+#pragma once
+
+#include "config/run_config.hpp"
+#include "controllers/aer_controller.hpp"
+#include "controllers/controller_execute.hpp"
+#include "framework/circuit.hpp"
+#include "framework/config.hpp"
+#include "framework/json.hpp"
+#include "framework/results/result.hpp"
+#include "noise/noise_model.hpp"
+#include "simulators/circuit_executor.hpp"
+#include <nlohmann/json.hpp>
+// #include "json/single_include/nlohmann/json.hpp"
+#include <string>
+
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
+using json = nlohmann::json;
+using namespace std::literals;
+using namespace AER;
+using namespace config;
+
+class AerSimulator {
+public:
+  static json execute(json circuit_json, json noise_model_json,
+                      const config::RunConfig &run_config) {
+
+    try {
+      // TODO: Maybe improve them to send several circuits at once
+      json run_config_json(run_config);
+      run_config_json["seed_simulator"] = run_config.seed;
+      // run_config_json["memory_slots"] = run_config.memory_slots;
+      spdlog::info("RunConfig JSON: {}", run_config_json.dump(4));
+      Config aer_config(run_config_json);
+
+      Noise::NoiseModel noise_model(noise_model_json);
+
+      spdlog::info("Constructing circuit...");
+      Circuit circuit(circuit_json, run_config_json, false);
+      spdlog::info("Circuit constructed successfully.");
+      std::vector<std::shared_ptr<Circuit>> circuits;
+      circuits.push_back(std::make_shared<Circuit>(circuit));
+
+      Result result =
+          controller_execute<Controller>(circuits, noise_model, aer_config);
+      return result.to_json();
+    } catch (const std::exception &e) {
+      // TODO: specify the circuit format in the docs.
+      /*
+      SPDLOG_LOGGER_ERROR(
+          logger,
+          "Error executing the circuit in the AER simulator.\n\tTry checking "
+          "the format of the circuit sent and/or of the noise model.");
+      */
+      spdlog::error(
+          "Error executing the circuit in the AER simulator.\n\tTry checking "
+          "the format of the circuit sent and/or of the noise model.");
+      return {{"ERROR", "\"" + std::string(e.what()) + "\""}};
+    }
+    return {};
+  }
+};
