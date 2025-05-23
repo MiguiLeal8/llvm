@@ -25,6 +25,16 @@ py::object createQuantumCircuit(int numQubits, const sycl::device &device) {
   return qiskit.attr("QuantumCircuit")(numQubits, numQubits);
 }
 
+// Inicializar qubits a un estado binario dado
+void initialize_qubits(py::object &quantumCircuit,
+                       const std::string &bitstring) {
+  for (size_t i = 0; i < bitstring.size(); ++i) {
+    if (bitstring[bitstring.size() - 1 - i] == '1') { // LSB primero
+      quantumCircuit.attr("x")(i); // Aplicar X si se quiere inicializar en 1
+    }
+  }
+}
+
 // Pauli-X gate
 void x(py::object &quantumCircuit, int target) {
   quantumCircuit.attr("x")(target);
@@ -51,7 +61,7 @@ void rx(py::object &quantumCircuit, int target, double angle) {
 }
 
 // Añadir una rotación en Y al QuantumCircuit
-void rz(py::object &quantumCircuit, int target, double angle) {
+void ry(py::object &quantumCircuit, int target, double angle) {
   quantumCircuit.attr("ry")(angle, target);
 }
 
@@ -83,12 +93,6 @@ void tdg(py::object &quantumCircuit, int target) {
 // Añadir una puerta CNOT al QuantumCircuit
 void cx(py::object &quantumCircuit, int control, int target) {
   quantumCircuit.attr("cx")(control, target);
-}
-
-// Añadir una puerta U3 al QuantumCircuit
-void u3(py::object &quantumCircuit, int target, double theta, double phi,
-        double lambda) {
-  quantumCircuit.attr("u3")(theta, phi, lambda, target);
 }
 
 // Medir un qubit en el QuantumCircuit
