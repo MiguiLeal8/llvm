@@ -30,15 +30,12 @@ public:
       // TODO: Maybe improve them to send several circuits at once
       json run_config_json(run_config);
       run_config_json["seed_simulator"] = run_config.seed;
-      // run_config_json["memory_slots"] = run_config.memory_slots;
-      spdlog::info("RunConfig JSON: {}", run_config_json.dump(4));
+
       Config aer_config(run_config_json);
 
       Noise::NoiseModel noise_model(noise_model_json);
 
-      spdlog::info("Constructing circuit...");
       Circuit circuit(circuit_json, run_config_json, false);
-      spdlog::info("Circuit constructed successfully.");
       std::vector<std::shared_ptr<Circuit>> circuits;
       circuits.push_back(std::make_shared<Circuit>(circuit));
 

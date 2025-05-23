@@ -25,6 +25,21 @@ py::object createQuantumCircuit(int numQubits, const sycl::device &device) {
   return qiskit.attr("QuantumCircuit")(numQubits, numQubits);
 }
 
+// Pauli-X gate
+void x(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("x")(target);
+}
+
+// Pauli-Y gate
+void y(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("y")(target);
+}
+
+// Pauli-Z gate
+void z(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("z")(target);
+}
+
 // Añadir una puerta Hadamard al QuantumCircuit
 void h(py::object &quantumCircuit, int target) {
   quantumCircuit.attr("h")(target);
@@ -33,6 +48,47 @@ void h(py::object &quantumCircuit, int target) {
 // Añadir una rotación en X al QuantumCircuit
 void rx(py::object &quantumCircuit, int target, double angle) {
   quantumCircuit.attr("rx")(angle, target);
+}
+
+// Añadir una rotación en Y al QuantumCircuit
+void rz(py::object &quantumCircuit, int target, double angle) {
+  quantumCircuit.attr("ry")(angle, target);
+}
+
+// Añadir una rotación en Z al QuantumCircuit
+void rz(py::object &quantumCircuit, int target, double angle) {
+  quantumCircuit.attr("rz")(angle, target);
+}
+
+// S gate
+void s(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("s")(target);
+}
+
+// S† (S-dagger)
+void sdg(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("sdg")(target);
+}
+
+// T gate
+void t(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("t")(target);
+}
+
+// T† gate
+void tdg(py::object &quantumCircuit, int target) {
+  quantumCircuit.attr("tdg")(target);
+}
+
+// Añadir una puerta CNOT al QuantumCircuit
+void cx(py::object &quantumCircuit, int control, int target) {
+  quantumCircuit.attr("cx")(control, target);
+}
+
+// Añadir una puerta U3 al QuantumCircuit
+void u3(py::object &quantumCircuit, int target, double theta, double phi,
+        double lambda) {
+  quantumCircuit.attr("u3")(theta, phi, lambda, target);
 }
 
 // Medir un qubit en el QuantumCircuit
@@ -58,8 +114,6 @@ nlohmann::json executeQuantumCircuit(py::object &quantumCircuit,
     // Parsear string JSON en C++
     nlohmann::json circuit_json =
         nlohmann::json::parse(json_str.cast<std::string>());
-
-    std::cout << circuit_json.dump(4) << std::endl;
 
     // Ejecutar el circuito utilizando AerSimulator
     return AerSimulator::execute(circuit_json, noise_model_json, run_config);
