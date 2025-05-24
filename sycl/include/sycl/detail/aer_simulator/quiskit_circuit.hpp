@@ -100,6 +100,24 @@ void measure(py::object &quantumCircuit, int target, int classicalBit) {
   quantumCircuit.attr("measure")(target, classicalBit);
 }
 
+// Mostrar los resultados (conteos) en binario
+void print_results_in_binary(const nlohmann::json &result, int num_qubits) {
+  try {
+    auto counts = result.at("results").at(0).at("data").at("counts");
+    std::cout << "\n=== Resultados ===\n";
+    for (auto &[state_hex, count] : counts.items()) {
+      // Convertir estado de hex a entero
+      unsigned int state_int = std::stoul(state_hex, nullptr, 16);
+      // Convertir a cadena binaria con padding según num_qubits
+      std::string binary = std::bitset<64>(state_int).to_string();
+      binary = binary.substr(64 - num_qubits); // mantener solo bits relevantes
+      std::cout << binary << " => " << count << "\n";
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Error mostrando resultados: " << e.what() << std::endl;
+  }
+}
+
 // Ejecutar el QuantumCircuit en el simulador
 nlohmann::json executeQuantumCircuit(py::object &quantumCircuit,
                                      const nlohmann::json &noise_model_json,
@@ -127,6 +145,21 @@ nlohmann::json executeQuantumCircuit(py::object &quantumCircuit,
   } catch (const std::exception &e) {
     throw std::runtime_error("Error en AerSimulator::execute: " +
                              std::string(e.what()));
+  }
+}
+
+// Función para imprimir el circuito en ASCII usando Qiskit
+void print_circuit_diagram(py::object &quantumCircuit) {
+  try {
+    // Usar el método draw(output='text') para obtener dibujo ASCII
+    py::object circuit_diagram =
+        quantumCircuit.attr("draw")(py::arg("output") = "text");
+    std::string diagram_str = py::str(circuit_diagram);
+    std::cout << "\n=== Diagrama del circuito cuántico ===\n";
+    std::cout << diagram_str << "\n";
+  } catch (const std::exception &e) {
+    std::cerr << "Error al imprimir el diagrama del circuito: " << e.what()
+              << std::endl;
   }
 }
 
